@@ -1,0 +1,8 @@
+streamlit
+yfinance
+transformers
+torch
+newsapi-python
+python-dotenv
+plotly
+pandas
