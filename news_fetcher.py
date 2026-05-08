@@ -27,6 +27,11 @@ def get_company_news(query="Microsoft", days_back=29, api_key=None):
         page_size=20
     )
 
+    if response.get("status") == "error":
+        code = response.get("code", "unknown_error")
+        message = response.get("message", "NewsAPI returned an error.")
+        raise RuntimeError(f"NewsAPI error ({code}): {message}")
+
     articles = response.get('articles', [])
 
     if not articles:

@@ -143,11 +143,8 @@ except ValueError:
         "Try a broader or different company name."
     )
     st.stop()
-except Exception:
-    st.error(
-        "Could not connect to NewsAPI. "
-        "Check that NEWS_API_KEY is set correctly in your .env file."
-    )
+except Exception as exc:
+    st.error(f"Could not load news from NewsAPI: {exc}")
     st.stop()
 
 
