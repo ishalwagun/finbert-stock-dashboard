@@ -1,33 +1,41 @@
 from transformers import pipeline
+import streamlit as st
 
 
-classifier = pipeline(
-    "text-classification",
-    model="ProsusAI/finbert"
-)
+
+# @st.cache_resource :  Streamlit loads FinBERT ONCE when the app starts
+@st.cache_resource
+def load_classifier():
+    return pipeline(
+        "text-classification",
+        model="ProsusAI/finbert"
+    )
 
 
-def analyze_sentiment(headline):
+
+def analyse_sentiment(headline):
     if not headline or not headline.strip():
         raise ValueError("Headline cannot be empty.")
 
+    classifier = load_classifier()
     result = classifier(headline, truncation=True)[0]
 
     return {
-        "label": result["label"],
-        "score": result["score"]
+        "label": result["label"],  # "positive", "negative", or "neutral"
+        "score": result["score"]     # confidence from 0.0 to 1.0
     }
+    
 
 
 if __name__ == "__main__":
-    sample_headlines = [
+    samples = [
         "Microsoft beats earnings expectations and raises its outlook.",
         "Tesla shares fall after weaker-than-expected vehicle deliveries.",
         "Apple reports quarterly results in line with analyst estimates."
     ]
 
-    for headline in sample_headlines:
-        sentiment = analyze_sentiment(headline)
+    for headline in samples:
+        sentiment = analyse_sentiment(headline)
 
         print("Headline:", headline)
         print("Label:", sentiment["label"])
